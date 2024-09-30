@@ -5,30 +5,25 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.envers.Audited;
 import java.io.Serializable;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
+@SuperBuilder
 @Getter
+@Setter
 @ToString
-@Builder
-@Audited
+@Entity
 @Table(name = "Autor")
-public class Autor implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Audited
+
+public class Autor extends Base {
+
+    @Column(name = "nombre")
     private String nombre;
+    @Column(name = "apellido")
     private String apellido;
+    @Column(name = "biografia")
     private String biografia;
-
-
-
-
-
-
 }

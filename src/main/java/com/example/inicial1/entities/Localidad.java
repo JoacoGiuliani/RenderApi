@@ -5,25 +5,17 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.envers.Audited;
 
-import java.io.Serializable;
-
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
+@SuperBuilder
 @Getter
+@Setter
 @ToString
-@Builder
-@Audited
+@Entity
 @Table(name = "Localidad")
-public class Localidad implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Audited
+public class Localidad extends Base{
+
+    @Column(name = "denominacion")
     private String denominacion;
-
-
-
-
-    }
-
+}

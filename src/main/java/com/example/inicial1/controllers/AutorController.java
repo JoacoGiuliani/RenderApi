@@ -1,82 +1,33 @@
 package com.example.inicial1.controllers;
 
 import com.example.inicial1.entities.Autor;
-import com.example.inicial1.services.AutorServices;
+import com.example.inicial1.services.AutorServicesImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/autores")
-public class AutorController {
+@CrossOrigin(origins = "*")
+@RequestMapping(path = "/autores")
+public class AutorController extends BaseControllerImpl<Autor, AutorServicesImpl>{
 
-    private AutorServices autorServices;
-
-    public AutorController(AutorServices autorServices) {
-        this.autorServices = autorServices;
-    }
-
-    @GetMapping("")
-    public ResponseEntity<?> getAll() {
+    @GetMapping("/search")
+    public ResponseEntity<?> search (@RequestParam String filtro){
         try {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(autorServices.findAll());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("{\"error\":\"Error, por favor intente más tarde\"}");
+            return ResponseEntity.status(HttpStatus.OK).body(servicio.search(filtro));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() +"\"}"));
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getOne(@PathVariable Long id) {
+    @GetMapping("/searchPaged")
+    public ResponseEntity<?> search (@RequestParam String filtro, Pageable pageable){
         try {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(autorServices.findById(id));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("{\"error\":\"Error, por favor intente más tarde\"}");
-        }
-    }
-
-    @PostMapping("")
-    public ResponseEntity<?> save(@RequestBody Autor entity) {
-        System.out.println("Estos datos los tomo del cuerpo del Formulario");
-        System.out.println("Nombre: " + entity.getNombre());
-        System.out.println("Apellido: " + entity.getApellido());
-
-        try {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(autorServices.save(entity));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("{\"error\":\"Error, por favor intente más tarde\"}");
-        }
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Autor entity) {
-        System.out.println("EL ID LO TOMO DE LA URL");
-        System.out.println("ID: " + entity.getId());
-        System.out.println("Nombre: " + entity.getNombre());
-        System.out.println("Apellido: " + entity.getApellido());
-
-        try {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(autorServices.update(id, entity));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("{\"error\":\"Error, por favor intente más tarde\"}");
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        try {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                    .body(autorServices.delete(id));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("{\"error\":\"Error, por favor intente más tarde\"}");
+            return ResponseEntity.status(HttpStatus.OK).body(servicio.search(filtro, pageable));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() +"\"}"));
         }
     }
 }
